@@ -37,37 +37,35 @@ export class LighthouseAuditScheduleImpl implements TaskScheduleDefinition {
   static fromConfig(config: Config, options: Options): TaskScheduleDefinition {
     const { logger } = options;
 
-    let lighthouse: TaskScheduleDefinition = {
-      frequency: { days: 1 },
-      timeout: { minutes: 10 },
-      initialDelay: { minutes: 15 },
-    };
-
     if (config.has('lighthouse.schedule.frequency')) {
-      lighthouse = readTaskScheduleDefinitionFromConfig(
-        config.getConfig('lighthouse.schedule'),
-      );
-    } else if (config.has('lighthouse.schedule')) {
+      return readTaskScheduleDefinitionFromConfig(
+        config.getConfig('lighthouse.schedule')
+      )
+    } else {
       logger.warn(
         `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.frequency'`,
       );
-
-      lighthouse.frequency = readDurationFromConfig(
-        config.getConfig('lighthouse.schedule'),
-      );
+      const frequency = config
+        .getOptionalConfig('lighthouse.schedule')
+        ?.get<HumanDuration>(),
+      const timeout = config
+        .getOptionalConfig('lighthouse.timeout')
+        ?.get<HumanDuration>();
+      timeout && logger.warn(
+          `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.timeout'`,
+        );
+      const initialDelay = config
+        .getOptionalConfig('lighthouse.initialDelay')
+        ?.get<HumanDuration>();
+      initialDelay && logger.warn(
+          `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.initialDelay'`,
+        );
+      return {
+        frequency: frequency ?? { days: 1 },
+        timeout: timeout ?? { minutes: 30 },
+        initialDelay: initialDelay ?? { minutes: 15 },
+      }
     }
-
-    if (config.has('lighthouse.timeout')) {
-      logger.warn(
-        `[Deprecation] Please migrate the timeout configuration to 'lighthouse.schedule.timeout'`,
-      );
-
-      lighthouse.timeout = readDurationFromConfig(
-        config.getConfig('lighthouse.timeout'),
-      );
-    }
-
-    return lighthouse;
   }
 
   constructor(
