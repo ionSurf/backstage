@@ -18,7 +18,7 @@ import {
   TaskScheduleDefinition,
   readTaskScheduleDefinitionFromConfig,
 } from '@backstage/backend-tasks';
-import { Config, readDurationFromConfig } from '@backstage/config';
+import { Config } from '@backstage/config';
 import { HumanDuration } from '@backstage/types';
 
 type Options = {
@@ -39,8 +39,8 @@ export class LighthouseAuditScheduleImpl implements TaskScheduleDefinition {
 
     if (config.has('lighthouse.schedule.frequency')) {
       return readTaskScheduleDefinitionFromConfig(
-        config.getConfig('lighthouse.schedule')
-      )
+        config.getConfig('lighthouse.schedule'),
+      );
     }
 
     logger.warn(
@@ -48,24 +48,28 @@ export class LighthouseAuditScheduleImpl implements TaskScheduleDefinition {
     );
     const frequency = config
       .getOptionalConfig('lighthouse.schedule')
-      ?.get<HumanDuration>(),
+      ?.get<HumanDuration>();
     const timeout = config
       .getOptionalConfig('lighthouse.timeout')
       ?.get<HumanDuration>();
-    timeout && logger.warn(
+    if (timeout) {
+      logger.warn(
         `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.timeout'`,
       );
+    }
     const initialDelay = config
       .getOptionalConfig('lighthouse.initialDelay')
       ?.get<HumanDuration>();
-    initialDelay && logger.warn(
+    if (initialDelay) {
+      logger.warn(
         `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.initialDelay'`,
       );
+    }
     return {
       frequency: frequency ?? { days: 1 },
       timeout: timeout ?? { minutes: 30 },
       initialDelay: initialDelay ?? { minutes: 15 },
-    }
+    };
   }
 
   constructor(
