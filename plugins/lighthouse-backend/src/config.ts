@@ -41,30 +41,30 @@ export class LighthouseAuditScheduleImpl implements TaskScheduleDefinition {
       return readTaskScheduleDefinitionFromConfig(
         config.getConfig('lighthouse.schedule')
       )
-    } else {
-      logger.warn(
-        `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.frequency'`,
+    }
+
+    logger.warn(
+      `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.frequency'`,
+    );
+    const frequency = config
+      .getOptionalConfig('lighthouse.schedule')
+      ?.get<HumanDuration>(),
+    const timeout = config
+      .getOptionalConfig('lighthouse.timeout')
+      ?.get<HumanDuration>();
+    timeout && logger.warn(
+        `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.timeout'`,
       );
-      const frequency = config
-        .getOptionalConfig('lighthouse.schedule')
-        ?.get<HumanDuration>(),
-      const timeout = config
-        .getOptionalConfig('lighthouse.timeout')
-        ?.get<HumanDuration>();
-      timeout && logger.warn(
-          `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.timeout'`,
-        );
-      const initialDelay = config
-        .getOptionalConfig('lighthouse.initialDelay')
-        ?.get<HumanDuration>();
-      initialDelay && logger.warn(
-          `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.initialDelay'`,
-        );
-      return {
-        frequency: frequency ?? { days: 1 },
-        timeout: timeout ?? { minutes: 30 },
-        initialDelay: initialDelay ?? { minutes: 15 },
-      }
+    const initialDelay = config
+      .getOptionalConfig('lighthouse.initialDelay')
+      ?.get<HumanDuration>();
+    initialDelay && logger.warn(
+        `[Deprecation] Please migrate the schedule configuration to 'lighthouse.schedule.initialDelay'`,
+      );
+    return {
+      frequency: frequency ?? { days: 1 },
+      timeout: timeout ?? { minutes: 30 },
+      initialDelay: initialDelay ?? { minutes: 15 },
     }
   }
 
