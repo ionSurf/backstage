@@ -37,12 +37,12 @@
     "test": "backstage-cli package test"
   },
   "dependencies": {
-    "@backstage/backend-common": "workspace:^",
-    "@backstage/backend-plugin-api": "workspace:^",
+    "@backstage/backend-common": "0.1.1",
+    "@backstage/backend-plugin-api": "0.1.0",
     "@backstage/config": "workspace:^",
     "@backstage/errors": "workspace:^",
     "@backstage/plugin-tech-insights-common": "workspace:^",
-    "@backstage/plugin-tech-insights-node": "workspace:^",
+    "@backstage/plugin-tech-insights-node": "0.1.0",
     "@backstage/types": "workspace:^",
     "ajv": "^8.10.0",
     "json-rules-engine": "^6.1.2",
