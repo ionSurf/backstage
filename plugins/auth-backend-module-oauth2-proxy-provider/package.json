@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "workspace:^",
-    "@backstage/errors": "workspace:^",
-    "@backstage/plugin-auth-node": "workspace:^",
+    "@backstage/errors": "0.1.1",
+    "@backstage/plugin-auth-node": "0.1.0",
     "jose": "^5.0.0"
   },
   "devDependencies": {
