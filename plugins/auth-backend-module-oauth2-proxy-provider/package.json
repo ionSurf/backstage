@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "workspace:^",
-    "@backstage/errors": "workspace:^",
+    "@backstage/errors": "0.1.1",
     "@backstage/plugin-auth-node": "workspace:^",
     "jose": "^5.0.0"
   },
